@@ -15,7 +15,9 @@ export class AuthService {
     const { email, password } = authDto;
     const fetchedUser = await this.userService.getUser(email);
     if (!fetchedUser) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        error: "No user registered with provided email",
+      });
     }
     const { password: fetchedPassword } = fetchedUser;
     const isPasswordCorrect = await BcryptUtil.comparePassword(
@@ -23,7 +25,9 @@ export class AuthService {
       fetchedPassword,
     );
     if (!isPasswordCorrect) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        error: "Provided password is incorrect",
+      });
     }
     const payload = { email };
     const token = await this.jwtService.signAsync(payload);
