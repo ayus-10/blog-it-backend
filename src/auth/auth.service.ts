@@ -16,7 +16,7 @@ export class AuthService {
     const fetchedUser = await this.userService.getUser(email);
     if (!fetchedUser) {
       throw new UnauthorizedException({
-        error: "No user registered with provided email",
+        message: "No user registered with provided email",
       });
     }
     const { password: fetchedPassword } = fetchedUser;
@@ -26,7 +26,7 @@ export class AuthService {
     );
     if (!isPasswordCorrect) {
       throw new UnauthorizedException({
-        error: "Provided password is incorrect",
+        message: "Provided password is incorrect",
       });
     }
     const payload = { email };
