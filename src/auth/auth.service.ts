@@ -4,6 +4,10 @@ import { UserService } from "src/user/user.service";
 import { BcryptUtil } from "src/utils/bcrypt.util";
 import { JwtService } from "@nestjs/jwt";
 
+interface AuthorizeHeaders extends Headers {
+  authorization?: string;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -29,8 +33,24 @@ export class AuthService {
         message: "Provided password is incorrect",
       });
     }
-    const payload = { email };
-    const token = await this.jwtService.signAsync(payload);
-    return { token };
+    const token = await this.jwtService.signAsync({ email });
+    return { email, token };
+  }
+
+  async authorizeUser(req: Request) {
+    const reqHeaders: AuthorizeHeaders = req.headers;
+    const tokenString = reqHeaders.authorization;
+    const token = tokenString.split(" ")[1];
+    let email: string;
+    try {
+      const tokenData = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET,
+      });
+      email = tokenData.email;
+    } catch {}
+    if (email) {
+      return { email, token };
+    }
+    return null;
   }
 }
