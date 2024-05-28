@@ -1,12 +1,13 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { AuthDto } from "./dto/auth.dto";
 import { UserService } from "src/user/user.service";
 import { BcryptUtil } from "src/utils/bcrypt.util";
 import { JwtService } from "@nestjs/jwt";
-
-interface AuthorizeHeaders extends Headers {
-  authorization?: string;
-}
+import { AuthorizationHeaders } from "src/interfaces/authorization-headers.interface";
 
 @Injectable()
 export class AuthService {
@@ -38,8 +39,11 @@ export class AuthService {
   }
 
   async authorizeUser(req: Request) {
-    const reqHeaders: AuthorizeHeaders = req.headers;
+    const reqHeaders: AuthorizationHeaders = req.headers;
     const tokenString = reqHeaders.authorization;
+    if (!tokenString) {
+      return null;
+    }
     const token = tokenString.split(" ")[1];
     let email: string;
     try {
@@ -47,7 +51,9 @@ export class AuthService {
         secret: process.env.JWT_SECRET,
       });
       email = tokenData.email;
-    } catch {}
+    } catch {
+      throw new InternalServerErrorException("Can not verify JWT token");
+    }
     if (email) {
       return { email, token };
     }
