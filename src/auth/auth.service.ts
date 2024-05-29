@@ -45,6 +45,9 @@ export class AuthService {
       return null;
     }
     const token = tokenString.split(" ")[1];
+    if (!token) {
+      return null;
+    }
     let email: string;
     try {
       const tokenData = this.jwtService.verify(token, {
@@ -52,7 +55,7 @@ export class AuthService {
       });
       email = tokenData.email;
     } catch {
-      throw new InternalServerErrorException("Can not verify JWT token");
+      throw new InternalServerErrorException("Can not verify the JWT");
     }
     if (email) {
       return { email, token };
