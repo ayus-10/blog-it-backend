@@ -28,4 +28,8 @@ export class BlogService {
 
     return createdBlog.save();
   }
+
+  getAllBlogs() {
+    return this.blogModel.find().exec();
+  }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Req,
   UploadedFile,
@@ -18,7 +19,6 @@ import { diskStorage } from "multer";
 import { v4 as uuidv4 } from "uuid";
 import { AuthService } from "src/auth/auth.service";
 
-@UseGuards(AuthGuard)
 @Controller("blog")
 export class BlogController {
   constructor(
@@ -27,6 +27,7 @@ export class BlogController {
   ) {}
 
   @Post()
+  @UseGuards(AuthGuard)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(
     FileInterceptor("image", {
@@ -49,5 +50,10 @@ export class BlogController {
   ) {
     const currentUser = await this.authService.authorizeUser(req);
     return await this.blogService.createBlog(currentUser, image, createBlogDto);
+  }
+
+  @Get()
+  getAll() {
+    return this.blogService.getAllBlogs();
   }
 }
