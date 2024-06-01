@@ -29,7 +29,11 @@ export class BlogService {
     return createdBlog.save();
   }
 
-  getAllBlogs() {
+  async getAllBlogs() {
     return this.blogModel.find().exec();
+  }
+
+  async getOneBlog(id: string) {
+    return await this.blogModel.findById(id).exec();
   }
 }

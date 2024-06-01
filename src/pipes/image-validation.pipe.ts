@@ -15,13 +15,13 @@ export class ImageValidationPipe implements PipeTransform {
       "image/png",
       "image/jpg",
       "image/jpeg",
-      "image/bmp",
+      "image/webp",
       "image/gif",
     ];
 
     if (!validMimeTypes.includes(image.mimetype)) {
       throw new NotAcceptableException({
-        error: "Only PNG, JPG, BMP and JIF images are allowed",
+        error: "Only PNG, JPG, WEBP and JIF images are allowed",
       });
     }
 

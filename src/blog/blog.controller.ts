@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Req,
   UploadedFile,
@@ -53,7 +54,12 @@ export class BlogController {
   }
 
   @Get()
-  getAll() {
-    return this.blogService.getAllBlogs();
+  async getAll() {
+    return await this.blogService.getAllBlogs();
+  }
+
+  @Get(":id")
+  async getOne(@Param("id") id: string) {
+    return await this.blogService.getOneBlog(id);
   }
 }
