@@ -12,6 +12,12 @@ export class Blog {
   category: string;
   @Prop()
   content: string;
+  @Prop()
+  views: number;
+  @Prop()
+  likes: string[];
+  @Prop()
+  comments: string[];
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);

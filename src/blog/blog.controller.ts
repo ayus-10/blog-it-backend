@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   UploadedFile,
@@ -61,5 +62,17 @@ export class BlogController {
   @Get(":id")
   async getOne(@Param("id") id: string) {
     return await this.blogService.getOneBlog(id);
+  }
+
+  @Get("views/:id")
+  async updateViews(@Param("id") id: string) {
+    return await this.blogService.updateViews(id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get("likes/:id")
+  async updateLikes(@Req() req: Request, @Param("id") id: string) {
+    const { email } = await this.authService.authorizeUser(req);
+    return await this.blogService.updateLikes(email, id);
   }
 }
