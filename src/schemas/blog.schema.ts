@@ -17,7 +17,7 @@ export class Blog {
   @Prop()
   likes: string[];
   @Prop()
-  comments: string[];
+  comments: { userEmail: string; comment: string }[];
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);

@@ -1,9 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
-  Patch,
   Post,
   Req,
   UploadedFile,
@@ -20,6 +20,7 @@ import { AuthGuard } from "src/guards/auth.guard";
 import { diskStorage } from "multer";
 import { v4 as uuidv4 } from "uuid";
 import { AuthService } from "src/auth/auth.service";
+import { CommentDto } from "./dto/comment.dto";
 
 @Controller("blog")
 export class BlogController {
@@ -74,5 +75,19 @@ export class BlogController {
   async updateLikes(@Req() req: Request, @Param("id") id: string) {
     const { email } = await this.authService.authorizeUser(req);
     return await this.blogService.updateLikes(email, id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post("comments")
+  async writeComment(@Req() req: Request, @Body() commentDto: CommentDto) {
+    const { email } = await this.authService.authorizeUser(req);
+    return await this.blogService.writeComment(email, commentDto);
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete("comments")
+  async deleteComment(@Req() req: Request, @Body() commentDto: CommentDto) {
+    const { email } = await this.authService.authorizeUser(req);
+    return await this.blogService.deleteComment(email, commentDto);
   }
 }
