@@ -55,6 +55,12 @@ export class BlogController {
     return await this.blogService.createBlog(currentUser, image, createBlogDto);
   }
 
+  @Delete(":id")
+  async delete(@Req() req: Request, @Param("id") id: string) {
+    const { email } = await this.authService.authorizeUser(req);
+    return await this.blogService.deleteBlog(email, id);
+  }
+
   @Get()
   async getAll() {
     return await this.blogService.getAllBlogs();

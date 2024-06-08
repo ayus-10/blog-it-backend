@@ -8,15 +8,20 @@ import {
 export class ImageValidationPipe implements PipeTransform {
   transform(image: Express.Multer.File) {
     if (!image) {
-      return image;
+      throw new NotAcceptableException({
+        error: "Please provide a valid image",
+      });
     }
 
     const validMimeTypes = [
       "image/png",
       "image/jpg",
       "image/jpeg",
+      "image/jfif",
+      "image/bmp",
       "image/webp",
       "image/gif",
+      "image/avif",
     ];
 
     if (!validMimeTypes.includes(image.mimetype)) {

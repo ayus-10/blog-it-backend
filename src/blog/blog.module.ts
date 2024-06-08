@@ -5,12 +5,14 @@ import { AuthModule } from "src/auth/auth.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Blog, BlogSchema } from "src/schemas/blog.schema";
 import { ServeStaticModule } from "@nestjs/serve-static";
+import { ConfigModule } from "@nestjs/config";
 import { join } from "path";
 
 @Module({
   imports: [
     AuthModule,
     MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
+    ConfigModule.forRoot({ envFilePath: ".env" }),
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), "public", "uploads"),
     }),
