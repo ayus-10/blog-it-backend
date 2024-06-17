@@ -55,7 +55,7 @@ export class BlogController {
     return await this.blogService.createBlog(currentUser, image, createBlogDto);
   }
 
-  @Delete(":id")
+  @Delete("id/:id")
   async delete(@Req() req: Request, @Param("id") id: string) {
     const { email } = await this.authService.authorizeUser(req);
     return await this.blogService.deleteBlog(email, id);
@@ -66,7 +66,7 @@ export class BlogController {
     return await this.blogService.getAllBlogs();
   }
 
-  @Get(":id")
+  @Get("id/:id")
   async getOne(@Param("id") id: string) {
     return await this.blogService.getOneBlog(id);
   }

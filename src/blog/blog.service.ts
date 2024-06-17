@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotAcceptableException } from "@nestjs/common";
 import { CreateBlogDto } from "./dto/create-blog.dto";
 import { UserToken } from "src/interfaces/user-token.interface";
 import { InjectModel } from "@nestjs/mongoose";
@@ -80,6 +80,20 @@ export class BlogService {
       comment,
     };
     const blog = await this.blogModel.findById(id);
+    const duplicateComment = blog.comments.some((cmt) => {
+      if (
+        cmt.userEmail === userComment.userEmail &&
+        cmt.comment === userComment.comment
+      ) {
+        return true;
+      }
+      return false;
+    });
+    if (duplicateComment) {
+      throw new NotAcceptableException({
+        error: "Duplicate comments are not allowed",
+      });
+    }
     blog.comments.push(userComment);
     return await this.blogModel.findByIdAndUpdate(id, blog);
   }
